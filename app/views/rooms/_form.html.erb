@@ -1,0 +1,59 @@
+<%= form_with(model: room) do |form| %>
+  <% if room.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
+
+      <ul>
+        <% room.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+  <div class="col-md-8">
+    <div class="field">
+      <%= form.label :name, "Room Name", class: "mb-1 text-muted", style: "display: block" %>
+      <%= form.text_field :name, class: 'form-control rounded-pill shadow-sm', placeholder: "Enter room name..." %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <%= form.submit "Add", class: "btn btn-primary btn-block mt-md-4 py-3 rounded-pill shadow-lg" %>
+  </div>
+</div>
+
+<style>
+  /* Custom styling for the form */
+  .field {
+    margin-bottom: 2rem; /* Spacing between form elements */
+  }
+
+  .text-muted {
+    color: #6c757d; /* Subdued text color */
+  }
+
+  .btn-primary {
+    background-color: #4CAF50; /* Primary button color */
+    border-color: #4CAF50; /* Button border color */
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #45a049; /* Darker hover color */
+    border-color: #45a049; /* Darker button border color */
+    transform: translateY(-2px); /* Lift the button slightly on hover */
+  }
+
+  .form-control {
+    border-color: #4CAF50; /* Input border color */
+  }
+
+  .form-control:focus {
+    border-color: #45a049; /* Input border color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25); /* Input focus shadow */
+  }
+</style>
+
+<% end %>

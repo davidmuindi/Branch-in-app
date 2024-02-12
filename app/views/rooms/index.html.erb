@@ -1,0 +1,164 @@
+<div id="room-id" data-room-id="<%= @room.try(:id) %>"></div>
+<div id="user-id" data-user-id="<%= current_user.id %>"></div>
+
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3" style="padding: 0;">
+      <div class="scrollable" style="overflow-y: auto; height: 100vh;">
+        <div class="card no-outline" style="border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background: linear-gradient(to right, #007bff, #00bcd4); color: white;">
+          <div class="card-body" style="padding: 20px;">
+            <h5 class="card-title mb-3">Welcome, <%= current_user.username %></h5>
+            <p class="card-text">You are logged in as <%= current_user.username %>.</p>
+          </div>
+        </div>
+        <hr style="border-color: #ccc; margin: 20px 0 40px;">
+    
+        <%= render 'form', room: Room.new %>
+        <hr>
+        
+        <% @rooms.each do |room| %>
+          <%= link_to room do %>
+            <style>
+              .card {
+                border: none; /* Remove border */
+              }
+            </style>
+            <div class="card mb-4 active-room">
+              <div class="card-body p-3">
+                <h4 class="card-title mb-3 text-white"><%= room.name %></h4>
+                <p class="card-text mb-2 text-white">
+                  <small><%= room.users.uniq.count %> Members</small>
+                </p>
+                <button class="btn btn-primary btn-block">Join Room</button>
+              </div>
+            </div>
+    
+            <style>
+              .active-room {
+                background: linear-gradient(120deg, #3498db, #ffffff); /* Gradient from blue to white */
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s;
+              }
+    
+              .active-room:hover {
+                transform: translateY(-5px); /* Lift the card slightly on hover */
+                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15); /* Increase shadow on hover */
+              }
+    
+              .active-room .card-title,
+              .active-room .card-text {
+                color: #fff; /* White text color for better contrast */
+              }
+    
+              .active-room .btn-primary {
+                background-color: #ffffff; /* White background for button */
+                color: #3498db; /* Matching color for button text */
+                border: 2px solid #ffffff; /* White border for button */
+                border-radius: 25px;
+                padding: 10px 20px;
+                font-size: 1rem;
+                font-weight: bold;
+                transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+              }
+    
+              .active-room .btn-primary:hover {
+                background-color: #3498db; /* Change button color on hover */
+                color: #ffffff; /* Change button text color on hover */
+                transform: translateY(-2px); /* Lift the button slightly on hover */
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* Increase shadow on hover */
+              }
+            </style>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-9 h-100vh d-flex flex-column justify-content-between">
+      <% if @room.present? %>
+        <div class="chat-room-container" style="max-width: 100%; height: 100vh; position: relative;">
+          <div class="chat-room" style="background-color: #f5f5f5; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); padding: 20px; height: 100%; position: relative;">
+            <nav class="navbar navbar-light unique-navbar" style="background: linear-gradient(120deg, #3498db, #ffffff); border-radius: 10px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); animation: gradientAnimation 5s infinite;">
+              <span class="navbar-brand" href="#" style="color: #ffffff; font-size: 28px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.4);"> <%= @room.name %> </span>
+              <br>
+              <small><%= @room.users.uniq.count %> Members</small>
+            </nav>
+            <div id="messages" class="scrollable">
+              <% @room.messages.each do |message| %>
+                <%= render 'messages/message', message: message %>
+              <% end %>
+            </div>
+            <div class="chat-box" style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+              <%= render 'messages/form', message: Message.new, room: @room %>
+              <style>
+                body {
+                  overflow-y: hidden;
+                  ::-webkit-scrollbar {
+                    display: none;
+                  }
+                  -ms-overflow-style: none;
+                }
+                .chat-room {
+                  height: 100vh;
+                }
+                #messages {
+                  height: 100%;
+                  overflow-y: scroll;
+                  padding-bottom: 200px;
+                  padding-top: 20px;
+                }
+                .chat-box {
+                  background-color: #f5f5f5;
+                  border-radius: 10px;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                  padding: 20px;
+                  max-width: 800px; /* Adjusted max-width */
+                  margin: 0 auto;
+                }
+                .chat-box input[type="text"] {
+                  width: 400px; /* Adjusted width */
+                  padding: 10px;
+                  border: none;
+                  border-radius: 25px;
+                  outline: none;
+                  font-size: 16px;
+                  margin-right: 10px;
+                }
+                .chat-box input[type="submit"] {
+                  width: 50px;
+                  height: 50px;
+                  background-color: #007bff;
+                  border: none;
+                  border-radius: 50%;
+                  color: #fff;
+                  font-size: 20px;
+                  cursor: pointer;
+                  transition: background-color 0.3s ease;
+                }
+                .chat-box input[type="submit"]:hover {
+                  background-color: #0056b3;
+                }
+                .message-container {
+                  display: flex;
+                  margin-bottom: 10px;
+                }
+                .message {
+                  flex: 1;
+                }
+                .message .content-container {
+                  display: inline-block;
+                  width: auto;
+                }
+                .me .content-container {
+                  float: right; /* Float 'me' messages to the right */
+                }
+              </style>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</body>

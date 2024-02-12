@@ -1,0 +1,12 @@
+<div class="message-container me">
+  <div class="message">
+    <div class="content-container">
+      <div class="content" style="padding: 10px; border-radius: 15px; <%= 'background-color: #007bff; color: white;' if message.user == current_user %> <%= 'background-color: #e9e9e9;' unless message.user == current_user %>">
+        <%= message.content %>
+      </div>
+      <div class="author" style="color: #666; font-size: 12px;">
+        <%= message.user.username %>
+      </div>
+    </div>
+  </div>
+</div>
